@@ -1,4 +1,4 @@
-# Stream Manager for Twitch
+# twitch.rs
 TUI for managing your livestream on Twitch.
 
 ## Features
