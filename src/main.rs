@@ -3,7 +3,6 @@ use std::collections::HashMap;
 use std::net::{TcpListener, TcpStream};
 
 use anyhow::Result;
-//use reqwest;
 //use tokio;
 
 const TWITCH_IRC_ADDRESS: &str = "irc.twitch.tv:443";
