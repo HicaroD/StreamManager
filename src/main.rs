@@ -5,14 +5,26 @@ use std::net::{TcpListener, TcpStream};
 use anyhow::Result;
 //use tokio;
 
-const TWITCH_IRC_ADDRESS: &str = "irc.twitch.tv:443";
+const TWITCH_IRC_ADDRESS: &str = "irc.twitch.tv:6667";
 const BUFFER_SIZE: usize = 2048; 
 
+fn build_command<'a>(command: &'a str, body: &'a str) -> String {
+    format!("{command} {body}\r\n")
+}
+
+fn authenticate(tcp_stream: &mut TcpStream) -> Result<()> {
+    // TODO: read Oauth token from .env and insert into PASS command
+    tcp_stream.write(build_command("PASS", "").as_bytes())?;
+    tcp_stream.write(build_command("NICK", "hicaro____").as_bytes())?;
+    Ok(())
+}
+
 fn main() -> Result<()> {
-    let mut irc_connection = TcpStream::connect(TWITCH_IRC_ADDRESS)?;
+    let mut stream = TcpStream::connect(TWITCH_IRC_ADDRESS)?;
     let mut buffer = [0; BUFFER_SIZE];
+    authenticate(&mut stream)?;
     loop {
-        irc_connection.read(&mut buffer)?;
+        stream.read(&mut buffer)?;
         let message = std::str::from_utf8(&buffer)?;
         println!("{}", message);
     }
