@@ -8,3 +8,4 @@ tui = "0.18"
 crossterm = "0.23"
 tokio = { version = "1", features = ["full"] }
 anyhow = "1.0"
+dotenvy = "0.15.2"
