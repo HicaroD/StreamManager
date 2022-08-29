@@ -1,6 +1,7 @@
 use std::io::*;
-use std::collections::HashMap;
-use std::net::{TcpListener, TcpStream};
+use std::net::TcpStream;
+use dotenvy::dotenv;
+use std::env;
 
 use anyhow::Result;
 //use tokio;
@@ -14,12 +15,14 @@ fn build_command<'a>(command: &'a str, body: &'a str) -> String {
 
 fn authenticate(tcp_stream: &mut TcpStream) -> Result<()> {
     // TODO: read Oauth token from .env and insert into PASS command
-    tcp_stream.write(build_command("PASS", "").as_bytes())?;
+    tcp_stream.write(build_command("PASS", &env::var("OAUTH_TOKEN")?).as_bytes())?;
     tcp_stream.write(build_command("NICK", "hicaro____").as_bytes())?;
     Ok(())
 }
 
 fn main() -> Result<()> {
+    dotenv().ok();
+
     let mut stream = TcpStream::connect(TWITCH_IRC_ADDRESS)?;
     let mut buffer = [0; BUFFER_SIZE];
     authenticate(&mut stream)?;
